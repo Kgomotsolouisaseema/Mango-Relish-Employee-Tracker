@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import SearchEmployee from './SearchEmployee';
+// import SearchEmployee from './SearchEmployee';
 
 const EmployeeForm = () => {
   const getemp = localStorage.getItem("employees")
@@ -19,21 +19,42 @@ const EmployeeForm = () => {
  const[position,setPosition]=useState(" ")
  const[phoneNumber,setPhoneNumber]=useState(" ")
  const[image,setImage]=useState(" ")
- //Revision
- const [selectedEmployee, setSelectedEmployee] = useState(null);
- const [employee, setEmployee] = useState([]);
+ //Revision these 
+//  const [selectedEmployee, setSelectedEmployee] = useState(null);
+//  const [employee, setEmployee] = useState([]);
+
  const [employees, setEmployees] = useState(storedData);
- const[searchEmployee , setsearchEmployee]=useState(" ")
- const searchBar = localStorage.getItem("employees")
- const result = JSON.parse(searchBar)
-     
+//  const[searchEmployee , setsearchEmployee]=useState(" ")
+//  const searchBar = localStorage.getItem("employees")
+//  const result = JSON.parse(searchBar)
+//  const [handleImage , setImageTo] = useState(" ")
+   
+
+  //Handle Image Funtion 
+  function handleImage(e){
+   
+      e.preventDefault();
+      const file = e.target.files[0];
+      const reader = new FileReader();
+  
+      reader.onloadend = () => {
+        setImage(reader.result);
+        console.log('image', reader.result); // Store image data in local storage
+      };
+  
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    };
+
+
   
     // Reset the form after submission
     const addEmployee = (event) => {
         event.preventDefault();
         
     
-    let employee = {name,surname,idNumber,position,image}
+    // let employee = {name,surname,idNumber,position,image}
     setEmployees((employees)=>[...employees,
         {
           name: name,
@@ -42,22 +63,23 @@ const EmployeeForm = () => {
           email: email,
           position: position,
           phoneNumber: phoneNumber,
-          image: Image              
+          image: image              
         }]);
-        console.log(name + " " + surname +" " + idNumber + " " + email + " " + position + " " + phoneNumber);
+        console.log(name + " " + surname +" " + idNumber + " " + email + " " + position + " " + image);
          alert("Employee Added Successfully");
     };
     
     //Pull Data from local storage
 
-    const getEmployeeByIdNumber = (idNumber)=>{
-        const selectedEmployee = employees.find((employee)=> employee.idNumber === idNumber);
-        return selectedEmployee;
-    }
+    // const getEmployeeByIdNumber = (idNumber)=>{
+    //     const selectedEmployee = employees.find((employee)=> employee.idNumber === idNumber);
+    //     return selectedEmployee;
+    // }
 
     
   useEffect(()=>{
     localStorage.setItem("employees", JSON.stringify(employees)); // pushing data to local storage
+    console.log(employees)
   }, [employees]);
 
 // // funtion to search employees in local storage using ID NUMEBR
@@ -99,15 +121,14 @@ const EmployeeForm = () => {
         <label>Phone Number:<input type="tel" name="phoneNumber" placeholder='Enter Phone Number' onChange={(event)=>setPhoneNumber(event.target.value)} /> </label>
       </div>
       <div>
-        <label>Image URL:<input type="text" name="image" placeholder='Upload Image' onChange={(event)=>setImage(event.target.value)} /></label>
+        <label>Image URL:<input type="file" name="image" placeholder='Upload Image' accept='img/*' onChange={handleImage} /></label>
       </div>
-       <button type="submit" onClick={addEmployee}>Submit</button>
-
-      {/* // <input type='button' placeholder='Search Employee' onChange={(event)=>setsearchEmployee(event.target.value)}></input>
-      // <button onClick={SearchEmployees}>Search Employee </button>  */}
+       <button type="submit" onClick={addEmployee}>Submit</button> <br/>
       <div>
 
-
+      {/* <button onClick={searchEmployee}>Search Employee </button> <br/>
+      <input type='button' placeholder='Search Employee' onChange={(event)=>setsearchEmployee(event.target.value)}></input>
+        */}
       </div>
 
 
@@ -115,7 +136,9 @@ const EmployeeForm = () => {
     </div>
     
     
-  );
-}
+  )
 
+  }
 export default EmployeeForm;
+
+
